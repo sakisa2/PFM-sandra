@@ -1,0 +1,12 @@
+[
+  {
+    "ContainingType": "PFM.Controllers.TransactionsController",
+    "Method": "ImportTransactions",
+    "RelativePath": "transactions/import",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]
