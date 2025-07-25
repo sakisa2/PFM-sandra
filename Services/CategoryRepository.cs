@@ -15,9 +15,10 @@ public class CategoryRepository : ICategoryRepository
         _context = context;
     }
 
-    public async Task<(bool success, List<string> errors)> SaveCategoriesAsync(CreateCategoryListDTO dto)
+    public async Task<(bool success, List<ValidationError> errors)> SaveCategoriesAsync(CreateCategoryListDTO dto)
     {
-        var errors = new List<string>();
+        var errors = new List<ValidationError>();
+
         var allInCsv = dto.Categories.Select(c => c.Code).ToHashSet();
         var existing = await _context.Categories.Select(c => c.Code).ToListAsync();
         var combined = allInCsv.Union(existing).ToHashSet();
@@ -25,7 +26,22 @@ public class CategoryRepository : ICategoryRepository
         foreach (var cat in dto.Categories)
         {
             if (!string.IsNullOrWhiteSpace(cat.ParentCode) && !combined.Contains(cat.ParentCode))
-                errors.Add($"Parent code not found: {cat.ParentCode} for {cat.Code}");
+            {
+                errors.Add(new ValidationError(
+                    tag: "parent-code",
+                    error: "not-found",
+                    message: $"Parent code not found: {cat.ParentCode} for {cat.Code}"
+                ));
+            }
+
+            if (existing.Contains(cat.Code))
+            {
+                errors.Add(new ValidationError(
+                    tag: "code",
+                    error: "category-already-exists",
+                    message: $"Category already exists: {cat.Code}"
+                ));
+            }
         }
 
         if (errors.Any()) return (false, errors);
@@ -78,6 +94,7 @@ public class CategoryRepository : ICategoryRepository
 
         return (true, []);
     }
+
 
 
 

@@ -12,8 +12,8 @@ using PFM.Data;
 namespace PFM.Backend.Migrations
 {
     [DbContext(typeof(TransactionDbContext))]
-    [Migration("20250722190443_AddTransactionSplits")]
-    partial class AddTransactionSplits
+    [Migration("20250725195935_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
