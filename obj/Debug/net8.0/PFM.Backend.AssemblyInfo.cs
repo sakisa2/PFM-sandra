@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PFM.Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d5c03ce02733a00ffb51e72cf3713ffd0ebb30ea")]
 [assembly: System.Reflection.AssemblyProductAttribute("PFM.Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PFM.Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

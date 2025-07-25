@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using PFM.Data;
 using PFM.Backend.Database.Entities;
 using PFM.Backend.Database.Entities.CategoriesDTO;
+using PFM.Backend.Models.Validation;
 using PFM.Backend.Services;
+using PFM.Data;
+
 
 public class CategoryRepository : ICategoryRepository
 {
@@ -76,4 +78,7 @@ public class CategoryRepository : ICategoryRepository
 
         return (true, []);
     }
+
+
+
 }

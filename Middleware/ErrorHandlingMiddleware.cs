@@ -19,7 +19,7 @@ namespace PFM.Backend.Middleware
         {
             try
             {
-                await _next(context); // nastavi dalje kroz pipeline
+                await _next(context); 
             }
             catch (ValidationException vex)
             {

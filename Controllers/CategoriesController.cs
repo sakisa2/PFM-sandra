@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PFM.Backend.Models.Requests;
-using PFM.Backend.Services;
 using PFM.Backend.Database.Entities.CategoriesDTO;
+using PFM.Backend.Models.Requests;
+using PFM.Backend.Models.Validation;
+using PFM.Backend.Services;
 
 namespace PFM.Controllers
 {
@@ -21,8 +22,9 @@ namespace PFM.Controllers
             _categoryRepository = categoryRepository;
         }
 
+
         [HttpPost("import")]
-        [Consumes("application/csv")]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> ImportCategories([FromForm] CategoryImportRequest request)
         {
             if (request.File == null || request.File.Length == 0)
@@ -50,5 +52,14 @@ namespace PFM.Controllers
 
             return Ok(new { message = "Categories imported successfully." });
         }
+
+
+
+
+
+
+
+
+
     }
 }

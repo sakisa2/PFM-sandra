@@ -12,14 +12,14 @@
         ],
         "parameters": [
           {
-            "name": "Catcode",
+            "name": "catcode",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "StartDate",
+            "name": "start-date",
             "in": "query",
             "schema": {
               "type": "string",
@@ -27,7 +27,7 @@
             }
           },
           {
-            "name": "EndDate",
+            "name": "end-date",
             "in": "query",
             "schema": {
               "type": "string",
@@ -35,7 +35,7 @@
             }
           },
           {
-            "name": "Direction",
+            "name": "direction",
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/Direction"
@@ -56,7 +56,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/csv": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
@@ -194,7 +194,17 @@
         ],
         "requestBody": {
           "content": {
-            "application/csv": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategorizeTransactionDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CategorizeTransactionDTO"
+              }
+            },
+            "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/CategorizeTransactionDTO"
               }

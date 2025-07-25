@@ -1099,4 +1099,5 @@ C:\Users\praksa\Desktop\najnovije1\PFM.Backend\PFM.Backend\obj\Debug\net8.0\refi
 C:\Users\praksa\Desktop\najnovije1\PFM.Backend\PFM.Backend\obj\Debug\net8.0\PFM.Backend.pdb
 C:\Users\praksa\Desktop\najnovije1\PFM.Backend\PFM.Backend\obj\Debug\net8.0\PFM.Backend.genruntimeconfig.cache
 C:\Users\praksa\Desktop\najnovije1\PFM.Backend\PFM.Backend\obj\Debug\net8.0\ref\PFM.Backend.dll
+C:\Users\praksa\Desktop\najnovije1\PFM.Backend\PFM.Backend\obj\Debug\net8.0\PFM.Backend.sourcelink.json
 C:\Users\praksa\Desktop\najnovije1\PFM.Backend\PFM.Backend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PFM.Backend.Database.Entities;
 using PFM.Backend.Database.Entities.CategoriesDTO;
 using PFM.Backend.Models.Queries;
 using PFM.Backend.Models.Requests;
 using PFM.Backend.Models.Responses;
+using PFM.Backend.Models.Validation;
 using PFM.Backend.Services;
-using PFM.Backend.Database.Entities.CategoriesDTO;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace PFM.Controllers
@@ -53,9 +54,7 @@ namespace PFM.Controllers
         }
 
 
-        [HttpPost("{id}/categorize")]
-        [Consumes("application/csv")]
-
+        [HttpPost("{id}/categorize")] 
         public async Task<IActionResult> CategorizeTransaction(string id, [FromBody] CategorizeTransactionDTO dto)
         {
             var success = await _transactionService.CategorizeTransactionAsync(id, dto.CategoryCode);
@@ -69,8 +68,38 @@ namespace PFM.Controllers
         [Tags("Analytics")]
         [HttpGet("/spending-analytics")]
         [Consumes("application/csv")]
+        // public async Task<IActionResult> GetSpendingAnalytics([FromQuery] SpendingAnalyticsQueryParameters query)
+        // {
+        //     var result = await _transactionService.GetSpendingAnalyticsAsync(
+        //        query.Catcode,
+        //        query.StartDate,
+        //        query.EndDate,
+        //        query.Direction
+        //    );
+
+        //     return Ok(result);
+        // }
         public async Task<IActionResult> GetSpendingAnalytics([FromQuery] SpendingAnalyticsQueryParameters query)
         {
+            var validationResult = new ValidationResult();
+
+            if (query.StartDate.HasValue && query.EndDate.HasValue &&
+                query.StartDate > query.EndDate)
+            {
+                validationResult.AddError("start-date", "invalid-range", "Start date must be before or equal to end date");
+            }
+
+            if (query.Direction != null &&
+                !Enum.IsDefined(typeof(Direction), query.Direction))
+            {
+                validationResult.AddError("direction", "invalid-value", $"Direction value '{query.Direction}' is not valid");
+            }
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new { errors = validationResult.Errors });
+            }
+
             var result = await _transactionService.GetSpendingAnalyticsAsync(
                 query.Catcode,
                 query.StartDate,
@@ -80,6 +109,7 @@ namespace PFM.Controllers
 
             return Ok(result);
         }
+
 
         [HttpPost("{id}/split")]
         public async Task<IActionResult> SplitTransaction(string id, [FromBody] List<SplitItemDTO> splits)

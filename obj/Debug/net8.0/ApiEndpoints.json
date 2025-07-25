@@ -24,22 +24,22 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "Catcode",
+        "Name": "catcode",
         "Type": "System.String",
         "IsRequired": false
       },
       {
-        "Name": "StartDate",
+        "Name": "start-date",
         "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
-        "Name": "EndDate",
+        "Name": "end-date",
         "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
       },
       {
-        "Name": "Direction",
+        "Name": "direction",
         "Type": "System.String",
         "IsRequired": false
       }
