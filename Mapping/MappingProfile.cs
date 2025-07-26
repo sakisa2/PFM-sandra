@@ -16,6 +16,16 @@ namespace PFM.Backend.Mapping
 
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
 
+            CreateMap<Transaction, TransactionDTO>()
+                .ForMember(dest => dest.Direction, opt => opt.MapFrom(src => Enum.Parse<Direction>(src.Direction)))
+                .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => Convert.ToDecimal(src.Amount)))
+                .ForMember(dest => dest.Mcc, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.Mcc) ? 0 : int.Parse(src.Mcc)));
+
+            CreateMap<TransactionDTO, Transaction>()
+                .ForMember(dest => dest.Direction, opt => opt.MapFrom(src => src.Direction.ToString()))
+                .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => Convert.ToDouble(src.Amount)))
+                .ForMember(dest => dest.Mcc, opt => opt.MapFrom(src => src.Mcc.ToString()));
+
         }
     }
 }
