@@ -18,6 +18,8 @@ namespace PFM.Backend.Services
         Direction? direction
     );
         Task<bool> SplitTransactionAsync(string transactionId, List<SplitItemDTO> splits);
+        Task AutoCategorize();
+
 
     }
 }

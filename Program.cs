@@ -5,6 +5,7 @@ using PFM.Backend.Database.Entities;
 using PFM.Backend.Middleware;
 using PFM.Backend.Services;
 using PFM.Data;
+using PFM.Backend.Models.AutomaticCategorization;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,9 @@ Console.WriteLine(">>> Program.cs is running <<<");
 //povezivanje sa bazom
 builder.Services.AddDbContext<TransactionDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Configuration.AddJsonFile("RulesConfig.json", optional: false, reloadOnChange: false);
+
 
 //registrovanje servisa 
 builder.Services.AddScoped<TransactionImportService>();
@@ -57,6 +61,9 @@ builder.Services
         options.JsonSerializerOptions.PropertyNamingPolicy = new KebabCaseNamingPolicy();
     });
 
+    builder.Services.Configure<RulesConfig>(
+        builder.Configuration
+    );
 
 var app = builder.Build();
 

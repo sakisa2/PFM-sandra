@@ -33,6 +33,9 @@ namespace PFM.Backend.Middleware
             }
             catch (Exception ex)
             {
+                Console.WriteLine(">>> EXCEPTION: " + ex.Message);
+                Console.WriteLine(">>> STACKTRACE: " + ex.StackTrace);
+
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
 
