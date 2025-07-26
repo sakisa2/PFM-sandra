@@ -5,7 +5,7 @@ namespace PFM.Backend.Services
 {
 public interface ICategoryRepository
 {
-        Task<(bool success, List<string> errors)> SaveCategoriesAsync(CreateCategoryListDTO categories);
+        Task<(bool success, List<ValidationError> errors)> SaveCategoriesAsync(CreateCategoryListDTO categories);
 
 }
 }

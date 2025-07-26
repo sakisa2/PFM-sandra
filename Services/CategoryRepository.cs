@@ -15,70 +15,83 @@ public class CategoryRepository : ICategoryRepository
         _context = context;
     }
 
-    public async Task<(bool success, List<string> errors)> SaveCategoriesAsync(CreateCategoryListDTO dto)
-    {
-        var errors = new List<string>();
-        var allInCsv = dto.Categories.Select(c => c.Code).ToHashSet();
-        var existing = await _context.Categories.Select(c => c.Code).ToListAsync();
-        var combined = allInCsv.Union(existing).ToHashSet();
+    public async Task<(bool success, List<ValidationError> errors)> SaveCategoriesAsync(CreateCategoryListDTO dto)
+     {
+         var errors = new List<ValidationError>();
 
-        foreach (var cat in dto.Categories)
-        {
-            if (!string.IsNullOrWhiteSpace(cat.ParentCode) && !combined.Contains(cat.ParentCode))
-                errors.Add($"Parent code not found: {cat.ParentCode} for {cat.Code}");
-        }
+         var allInCsv = dto.Categories.Select(c => c.Code).ToHashSet();
+         var existing = await _context.Categories.Select(c => c.Code).ToListAsync();
+         var combined = allInCsv.Union(existing).ToHashSet();
 
-        if (errors.Any()) return (false, errors);
+         foreach (var cat in dto.Categories)
+         {
+             if (!string.IsNullOrWhiteSpace(cat.ParentCode) && !combined.Contains(cat.ParentCode))
+             {
+                 errors.Add(new ValidationError(
+                     tag: "parent-code",
+                     error: "not-found",
+                     message: $"Parent code not found: {cat.ParentCode} for {cat.Code}"
+                 ));
+             }
 
-        var root = dto.Categories.Where(c => string.IsNullOrWhiteSpace(c.ParentCode)).ToList();
-        var children = dto.Categories.Where(c => !string.IsNullOrWhiteSpace(c.ParentCode)).ToList();
+             if (existing.Contains(cat.Code))
+             {
+                 errors.Add(new ValidationError(
+                     tag: "code",
+                     error: "category-already-exists",
+                     message: $"Category already exists: {cat.Code}"
+                 ));
+             }
+         }
 
-        foreach (var c in root)
-        {
-            var existingCat = await _context.Categories.FindAsync(c.Code);
-            if (existingCat != null)
-            {
-                existingCat.Name = c.Name;
-                _context.Categories.Update(existingCat);
-            }
-            else
-            {
-                _context.Categories.Add(new Category
-                {
-                    Code = c.Code,
-                    Name = c.Name,
-                    ParentCode = null
-                });
-            }
-        }
+         if (errors.Any()) return (false, errors);
 
-        await _context.SaveChangesAsync();
+         var root = dto.Categories.Where(c => string.IsNullOrWhiteSpace(c.ParentCode)).ToList();
+         var children = dto.Categories.Where(c => !string.IsNullOrWhiteSpace(c.ParentCode)).ToList();
 
-        foreach (var c in children)
-        {
-            var existingCat = await _context.Categories.FindAsync(c.Code);
-            if (existingCat != null)
-            {
-                existingCat.Name = c.Name;
-                existingCat.ParentCode = c.ParentCode;
-                _context.Categories.Update(existingCat);
-            }
-            else
-            {
-                _context.Categories.Add(new Category
-                {
-                    Code = c.Code,
-                    Name = c.Name,
-                    ParentCode = c.ParentCode
-                });
-            }
-        }
+         foreach (var c in root)
+         {
+             var existingCat = await _context.Categories.FindAsync(c.Code);
+             if (existingCat != null)
+             {
+                 existingCat.Name = c.Name;
+                 _context.Categories.Update(existingCat);
+             }
+             else
+             {
+                 _context.Categories.Add(new Category
+                 {
+                     Code = c.Code,
+                     Name = c.Name,
+                     ParentCode = null
+                 });
+             }
+         }
 
-        await _context.SaveChangesAsync();
+         await _context.SaveChangesAsync();
 
-        return (true, []);
-    }
+         foreach (var c in children)
+         {
+             var existingCat = await _context.Categories.FindAsync(c.Code);
+             if (existingCat != null)
+             {
+                 existingCat.Name = c.Name;
+                 existingCat.ParentCode = c.ParentCode;
+                 _context.Categories.Update(existingCat);
+             }
+             else
+             {
+                 _context.Categories.Add(new Category
+                 {
+                     Code = c.Code,
+                     Name = c.Name,
+                     ParentCode = c.ParentCode
+                 });
+             }
+         }
 
+         await _context.SaveChangesAsync();
 
-
+         return (true, []);
+     }
 }

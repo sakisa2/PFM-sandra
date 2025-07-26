@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4ObVSuZxN7U=",
+  "dgSpecHash": "3wnptbpvuXo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\praksa\\Desktop\\najnovije1\\PFM.Backend\\PFM.Backend\\PFM.Backend.csproj",
+  "projectFilePath": "C:\\Users\\praksa\\Desktop\\verzija2607\\sandra2\\PFM-sandra\\PFM.Backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\praksa\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\praksa\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

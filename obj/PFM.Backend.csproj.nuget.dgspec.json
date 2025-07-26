@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\praksa\\Desktop\\najnovije1\\PFM.Backend\\PFM.Backend\\PFM.Backend.csproj": {}
+    "C:\\Users\\praksa\\Desktop\\verzija2607\\sandra2\\PFM-sandra\\PFM.Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\praksa\\Desktop\\najnovije1\\PFM.Backend\\PFM.Backend\\PFM.Backend.csproj": {
+    "C:\\Users\\praksa\\Desktop\\verzija2607\\sandra2\\PFM-sandra\\PFM.Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\praksa\\Desktop\\najnovije1\\PFM.Backend\\PFM.Backend\\PFM.Backend.csproj",
+        "projectUniqueName": "C:\\Users\\praksa\\Desktop\\verzija2607\\sandra2\\PFM-sandra\\PFM.Backend.csproj",
         "projectName": "PFM.Backend",
-        "projectPath": "C:\\Users\\praksa\\Desktop\\najnovije1\\PFM.Backend\\PFM.Backend\\PFM.Backend.csproj",
+        "projectPath": "C:\\Users\\praksa\\Desktop\\verzija2607\\sandra2\\PFM-sandra\\PFM.Backend.csproj",
         "packagesPath": "C:\\Users\\praksa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\praksa\\Desktop\\najnovije1\\PFM.Backend\\PFM.Backend\\obj\\",
+        "outputPath": "C:\\Users\\praksa\\Desktop\\verzija2607\\sandra2\\PFM-sandra\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
