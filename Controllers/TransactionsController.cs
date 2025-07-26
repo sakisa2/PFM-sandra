@@ -122,5 +122,12 @@ namespace PFM.Controllers
             return Ok("Transaction split successfully.");
         }
 
+        [HttpPost("auto-categorize")]
+                public async Task<ActionResult<string>> AutoCategorize()
+                {
+                    await _transactionService.AutoCategorize();
+                    return Ok();
+                }
+
     }
 }

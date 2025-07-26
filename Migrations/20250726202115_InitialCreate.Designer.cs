@@ -12,7 +12,7 @@ using PFM.Data;
 namespace PFM.Backend.Migrations
 {
     [DbContext(typeof(TransactionDbContext))]
-    [Migration("20250725195935_InitialCreate")]
+    [Migration("20250726202115_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

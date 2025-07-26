@@ -139,6 +139,26 @@
   },
   {
     "ContainingType": "PFM.Controllers.TransactionsController",
+    "Method": "AutoCategorize",
+    "RelativePath": "transactions/auto-categorize",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "PFM.Controllers.TransactionsController",
     "Method": "ImportTransactions",
     "RelativePath": "transactions/import",
     "HttpMethod": "POST",

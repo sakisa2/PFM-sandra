@@ -1,0 +1,163 @@
+{
+  "rules": [
+    {
+      "title": "When beneficiary name contains chevron or shell, categorize transaction as 4 (Auto & Transport)",
+      "catcode": "4",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%chevron%' OR LOWER(\"BeneficiaryName\") LIKE '%shell%'"
+    },
+    {
+      "title": "When mcc is 5811 (Caterers) categorize transaction as 39 (Food & Dining / Restaurants)",
+      "catcode": "39",
+      "predicate": "\"Mcc\" = '5811'"
+    },
+    {
+      "title": "Online shopping",
+      "catcode": "21",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%amazon%' OR LOWER(\"BeneficiaryName\") LIKE '%aliexpress%'"
+    }, {
+      "title": "Categorize MCC 5812 as Restaurants",
+      "catcode": "2",
+      "predicate": "\"Mcc\" = '5812'"
+    },
+    {
+      "title": "Categorize MCC 5411 as Grocery Stores",
+      "catcode": "11",
+      "predicate": "\"Mcc\" = '5411'"
+    },
+    {
+      "title": "Categorize supermarket transactions as Food (Lidl, Maxi, Idea, Aman)",
+      "catcode": "44",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%lidl%' OR LOWER(\"BeneficiaryName\") LIKE '%maxi%' OR LOWER(\"BeneficiaryName\") LIKE '%idea%' OR LOWER(\"BeneficiaryName\") LIKE '%aman%'"
+    },
+    {
+      "title": "Categorize bills and utilities (EPS, Infostan, Telekom, SBB)",
+      "catcode": "100",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%eps%' OR LOWER(\"BeneficiaryName\") LIKE '%infostan%' OR LOWER(\"BeneficiaryName\") LIKE '%telekom%' OR LOWER(\"BeneficiaryName\") LIKE '%sbb%'"
+    },
+    {
+      "title": "Categorize clothing stores (Zara, H&M, Bershka)",
+      "catcode": "23",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%zara%' OR LOWER(\"BeneficiaryName\") LIKE '%h&m%' OR LOWER(\"BeneficiaryName\") LIKE '%bershka%'"
+    },
+    {
+      "title": "Categorize pharmacies (Dr Max, Benu, Lilly)",
+      "catcode": "5",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%dr max%' OR LOWER(\"BeneficiaryName\") LIKE '%benu%' OR LOWER(\"BeneficiaryName\") LIKE '%lilly%'"
+    },
+    {
+      "title": "Categorize home improvement stores (IKEA, JYSK, Uradi Sam)",
+      "catcode": "23",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%ikea%' OR LOWER(\"BeneficiaryName\") LIKE '%jysk%' OR LOWER(\"BeneficiaryName\") LIKE '%uradi sam%'"
+    },
+    {
+      "title": "Categorize tech and electronics (Tehnomanija, Gigatron, WinWin)",
+      "catcode": "10",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%tehnomanija%' OR LOWER(\"BeneficiaryName\") LIKE '%gigatron%' OR LOWER(\"BeneficiaryName\") LIKE '%winwin%'"
+    },
+    {
+      "title": "Categorize entertainment platforms (Netflix, Spotify, Deezer)",
+      "catcode": "15",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%netflix%' OR LOWER(\"BeneficiaryName\") LIKE '%spotify%' OR LOWER(\"BeneficiaryName\") LIKE '%deezer%'"
+    },
+    {
+      "title": "Categorize fuel stations (OMV, Gazprom, NIS, Lukoil)",
+      "catcode": "47",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%omv%' OR LOWER(\"BeneficiaryName\") LIKE '%gazprom%' OR LOWER(\"BeneficiaryName\") LIKE '%nis%' OR LOWER(\"BeneficiaryName\") LIKE '%lukoil%'"
+    },
+    {
+      "title": "Categorize MCC 5969 as Loan Payment Services",
+      "catcode": "77",
+      "predicate": "\"Mcc\" = '5969'"
+    },
+    {
+      "title": "Categorize MCC 6011 as ATM Fees",
+      "catcode": "25",
+      "predicate": "\"Mcc\" = '6011'"
+    },
+    {
+      "title": "Categorize MCC 4814 as Mobile Phone Services",
+      "catcode": "11",
+      "predicate": "\"Mcc\" = '4814'"
+    },
+    {
+      "title": "Categorize payment to PayPal as Financial Services",
+      "catcode": "33",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%paypal%'"
+    },
+    {
+      "title": "Categorize education platforms (Coursera, Udemy, Khan Academy)",
+      "catcode": "15",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%coursera%' OR LOWER(\"BeneficiaryName\") LIKE '%udemy%' OR LOWER(\"BeneficiaryName\") LIKE '%khan%'"
+    },
+    {
+      "title": "Categorize hair salons and barbers (Frizer, Barber, Haircut)",
+      "catcode": "80",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%frizer%' OR LOWER(\"BeneficiaryName\") LIKE '%barber%' OR LOWER(\"BeneficiaryName\") LIKE '%haircut%'"
+    },
+    {
+      "title": "Categorize government tax payments",
+      "catcode": "96",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%porez%' OR LOWER(\"BeneficiaryName\") LIKE '%uprava%' OR LOWER(\"BeneficiaryName\") LIKE '%tax%'"
+    },
+    {
+      "title": "Categorize MCC 4111 as Public Transportation",
+      "catcode": "105",
+      "predicate": "\"Mcc\" = '4111'"
+    },
+    {
+      "title": "Categorize bookstore purchases (Laguna, Delfi)",
+      "catcode": "88",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%laguna%' OR LOWER(\"BeneficiaryName\") LIKE '%delfi%'"
+    },
+    {
+      "title": "Categorize gym memberships (Teretana, X-fit, Synergy)",
+      "catcode": "47",
+      "predicate": "LOWER(\"BeneficiaryName\") LIKE '%teretana%' OR LOWER(\"BeneficiaryName\") LIKE '%x-fit%' OR LOWER(\"BeneficiaryName\") LIKE '%synergy%'"
+    },
+    {
+      "title": "Categorize MCC 5499 as Health & Fitness Stores",
+      "catcode": "49",
+      "predicate": "\"Mcc\" = '5499'"
+    },
+    {
+      "title": "Categorize MCC 7523 as Parking Services",
+      "catcode": "5",
+      "predicate": "\"Mcc\" = '7523'"
+    },
+    {
+      "title": "Categorize MCC 5995 as Pet Food & Supplies",
+      "catcode": "84",
+      "predicate": "\"Mcc\" = '5995'"
+    },
+    {
+      "title": "Categorize MCC 7519 as Car Rental Services",
+      "catcode": "105",
+      "predicate": "\"Mcc\" = '7519'"
+    },
+    {
+      "title": "Categorize MCC 8299 as Education & Training Services",
+      "catcode": "15",
+      "predicate": "\"Mcc\" = '8299'"
+    },
+    {
+      "title": "Categorize MCC 5192 as Bookstores",
+      "catcode": "88",
+      "predicate": "\"Mcc\" = '5192'"
+    },
+    {
+      "title": "Categorize MCC 5045 as Home Improvement Supplies",
+      "catcode": "53",
+      "predicate": "\"Mcc\" = '5045'"
+    },
+    {
+      "title": "Categorize MCC 8050 as Medical Services",
+      "catcode": "45",
+      "predicate": "\"Mcc\" = '8050'"
+    },
+    {
+      "title": "Categorize MCC 8011 as Doctor Services",
+      "catcode": "45",
+      "predicate": "\"Mcc\" = '8011'"
+    }
+  ]
+}

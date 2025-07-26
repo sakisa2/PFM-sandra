@@ -7,7 +7,8 @@ using PFM.Data;
 using AutoMapper;
 using PFM.Backend.Models.Exceptions;
 using PFM.Backend.Models.Validation;
-
+using PFM.Backend.Models.AutomaticCategorization;
+using Microsoft.Extensions.Options;
 
 namespace PFM.Backend.Services
 {
@@ -17,10 +18,15 @@ namespace PFM.Backend.Services
 
         private readonly TransactionDbContext _context;
 
-        public TransactionService(TransactionDbContext context, IMapper mapper)
+        private readonly RulesConfig _rulesConfig;
+
+
+        public TransactionService(TransactionDbContext context, IMapper mapper, IOptions<RulesConfig> optionsAccessor)
         {
             _context = context;
             _mapper = mapper;
+            _rulesConfig = optionsAccessor.Value;
+
         }
 
         public async Task<bool> CategorizeTransactionAsync(string transactionId, string categoryCode)
@@ -191,10 +197,23 @@ namespace PFM.Backend.Services
 
                 return new SpendingAnalyticsResponse
                 {
-                    Groups = new List<SpendingGroupDTO> { group }
+                    Groups = new List<SpendingGroupDTO> {group }
                 };
             }
         }
+
+        public async Task AutoCategorize()
+                {
+                    foreach (var rule in _rulesConfig.Rules)
+                    {
+                        var title = rule.Title;
+                        var catcode = rule.Catcode;
+                        var predicate = rule.Predicate;
+
+                        var query = $"UPDATE \"Transactions\" SET \"Catcode\" = '{catcode}' WHERE {predicate} AND \"Catcode\" IS NULL";
+                        await _context.Database.ExecuteSqlRawAsync(query);
+                    }
+                }
 
         public async Task<bool> SplitTransactionAsync(string transactionId, List<SplitItemDTO> splits)
         {
@@ -235,6 +254,8 @@ namespace PFM.Backend.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+
 
 
     }
