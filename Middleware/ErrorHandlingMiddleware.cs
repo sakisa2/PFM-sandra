@@ -31,6 +31,16 @@ namespace PFM.Backend.Middleware
 
                 await context.Response.WriteAsync(json);
             }
+            catch (BusinessException bex)
+            {
+                context.Response.StatusCode = 440;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new { errors = bex.Errors };
+                var json = JsonSerializer.Serialize(errorResponse);
+
+                await context.Response.WriteAsync(json);
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(">>> EXCEPTION: " + ex.Message);

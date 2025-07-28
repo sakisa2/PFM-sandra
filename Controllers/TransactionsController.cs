@@ -39,10 +39,16 @@ namespace PFM.Controllers
 
             if (!result.IsValid)
             {
-                return BadRequest(result); // 400 - validacione greske
+                
+                var hasBusinessError = result.Errors.Any(e => e.Error == "duplicate-id");
+
+                if (hasBusinessError)
+                    return StatusCode(440, result); // Biznis greška  440
+
+                return BadRequest(result); // Validacione greške 400
             }
 
-            return Ok("Transactions imported successfully."); // 200 - ok
+            return Ok("Transactions imported successfully."); // 200  ok
         }
 
 
@@ -68,17 +74,6 @@ namespace PFM.Controllers
         [Tags("Analytics")]
         [HttpGet("/spending-analytics")]
         [Consumes("application/csv")]
-        // public async Task<IActionResult> GetSpendingAnalytics([FromQuery] SpendingAnalyticsQueryParameters query)
-        // {
-        //     var result = await _transactionService.GetSpendingAnalyticsAsync(
-        //        query.Catcode,
-        //        query.StartDate,
-        //        query.EndDate,
-        //        query.Direction
-        //    );
-
-        //     return Ok(result);
-        // }
         public async Task<IActionResult> GetSpendingAnalytics([FromQuery] SpendingAnalyticsQueryParameters query)
         {
             var validationResult = new ValidationResult();

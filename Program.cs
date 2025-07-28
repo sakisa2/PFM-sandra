@@ -10,6 +10,17 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 Console.WriteLine(">>> Program.cs is running <<<");
 
 //povezivanje sa bazom
@@ -65,7 +76,18 @@ builder.Services
         builder.Configuration
     );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // ili https ako koristiš SSL
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 

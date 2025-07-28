@@ -41,6 +41,12 @@ public class TransactionImportService
         foreach (var record in records)
         {
             var errors = ValidateTransaction(record);
+            
+            if (await _dbContext.Transactions.AnyAsync(t => t.Id == record.Id))
+            {
+                errors.Add(new ValidationError(nameof(record.Id), "duplicate-id", $"Transaction with ID '{record.Id}' already exists."));
+            }
+
             if (errors.Any())
             {
                 result.Errors.AddRange(errors);
@@ -88,6 +94,12 @@ public class TransactionImportService
 
         if (!Enum.IsDefined(typeof(Kind), transaction.Kind))
             errors.Add(new ValidationError(nameof(transaction.Kind), "invalid-kind", $"Invalid kind: {transaction.Kind}"));
+
+        if (!string.IsNullOrEmpty(transaction.Mcc))
+        {
+            if (!System.Text.RegularExpressions.Regex.IsMatch(transaction.Mcc, @"^\d{4}$"))
+                errors.Add(new ValidationError(nameof(transaction.Mcc), "invalid-mcc", "Mcc code must be a 4 digit code."));
+        }
 
         return errors;
     }

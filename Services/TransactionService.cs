@@ -44,24 +44,6 @@ namespace PFM.Backend.Services
 
         public async Task<PagedResult<TransactionDTO>> GetTransactionsAsync(TransactionQueryParameters parameters)
         {
-            var query = _context.Transactions.AsQueryable();
-
-            if (parameters.StartDate.HasValue)
-            {
-                var startUtc = DateTime.SpecifyKind(parameters.StartDate.Value, DateTimeKind.Utc);
-                query = query.Where(t => t.Date >= startUtc);
-            }
-
-            if (parameters.EndDate.HasValue)
-            {
-                var endUtc = DateTime.SpecifyKind(parameters.EndDate.Value, DateTimeKind.Utc);
-                query = query.Where(t => t.Date <= endUtc);
-            }
-
-            if (parameters.Kinds != null && parameters.Kinds.Any())
-            {
-                query = query.Where(t => parameters.Kinds.Contains(t.Kind));
-            }
 
             var validationResult = new ValidationResult();
 
@@ -86,8 +68,34 @@ namespace PFM.Backend.Services
                 validationResult.AddError("sort-by", "invalid-field", "SortBy must be 'date' or 'amount'");
             }
 
+            if (parameters.StartDate.HasValue && parameters.EndDate.HasValue && parameters.StartDate > parameters.EndDate)
+            {
+                validationResult.AddError("start-date", "invalid-range", "Start date cannot be after end date.");
+            }
+
+
             if (validationResult.Errors.Any())
                 throw new ValidationException(validationResult);
+
+
+            var query = _context.Transactions.AsQueryable();
+
+            if (parameters.StartDate.HasValue)
+            {
+                var startUtc = DateTime.SpecifyKind(parameters.StartDate.Value, DateTimeKind.Utc);
+                query = query.Where(t => t.Date >= startUtc);
+            }
+
+            if (parameters.EndDate.HasValue)
+            {
+                var endUtc = DateTime.SpecifyKind(parameters.EndDate.Value, DateTimeKind.Utc);
+                query = query.Where(t => t.Date <= endUtc);
+            }
+
+            if (parameters.Kinds != null && parameters.Kinds.Any())
+            {
+                query = query.Where(t => parameters.Kinds.Contains(t.Kind));
+            }
 
 
 
@@ -222,25 +230,33 @@ namespace PFM.Backend.Services
                 .FirstOrDefaultAsync(t => t.Id == transactionId);
 
             if (transaction == null)
-            {
-                Console.WriteLine($"Transakcija sa ID = '{transactionId}' nije pronađena u bazi.");
                 return false;
+
+            
+            foreach (var split in splits)
+            {
+                var category = await _context.Categories.FindAsync(split.Catcode);
+                if (category == null)
+                    return false;
+            }
+
+            
+            var totalSplitAmount = splits.Sum(s => s.Amount);
+            if (totalSplitAmount > transaction.Amount)
+            {
+                throw new BusinessException(new List<ValidationError>
+        {
+            new ValidationError("split", "split-amount-over-transaction-amount", "Total amount of splits exceeds transaction amount.")
+        });
             }
 
             
             var existingSplits = _context.TransactionSplits.Where(s => s.TransactionId == transactionId);
             _context.TransactionSplits.RemoveRange(existingSplits);
 
+            
             foreach (var split in splits)
             {
-                var category = await _context.Categories.FindAsync(split.Catcode);
-
-                if (category == null)
-                {
-                    Console.WriteLine($"Kategorija sa catcode = '{split.Catcode}' nije pronađena u bazi.");
-                    return false;
-                }
-
                 var newSplit = new TransactionSplit
                 {
                     TransactionId = transactionId,
@@ -254,9 +270,6 @@ namespace PFM.Backend.Services
             await _context.SaveChangesAsync();
             return true;
         }
-
-
-
 
     }
 
