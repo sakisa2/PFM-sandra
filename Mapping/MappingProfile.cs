@@ -2,6 +2,8 @@
 using PFM.Backend.Database.Entities;
 using PFM.Backend.Database.Entities.CategoriesDTO;
 using PFM.Backend.Models;
+using PFM.Backend.Models.Requests;
+using PFM.Backend.Models.Responses;
 
 namespace PFM.Backend.Mapping
 {
@@ -15,6 +17,8 @@ namespace PFM.Backend.Mapping
                 .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src));
 
             CreateMap<Transaction, TransactionDTO>().ReverseMap();
+            CreateMap<TransactionSplit, TransactionSplitDTO>().ReverseMap();
+
 
             CreateMap<Transaction, TransactionDTO>()
                 .ForMember(dest => dest.Direction, opt => opt.MapFrom(src => Enum.Parse<Direction>(src.Direction)))

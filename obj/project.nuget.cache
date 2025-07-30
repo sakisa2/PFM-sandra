@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "EsAaibDlOWI=",
+  "dgSpecHash": "D2WPxFnQeRY=",
   "success": true,
   "projectFilePath": "C:\\Users\\praksa\\Desktop\\ispravno\\PFM-sandra\\PFM.Backend.csproj",
   "expectedPackageFiles": [
@@ -36,6 +36,7 @@
     "C:\\Users\\praksa\\.nuget\\packages\\microsoft.extensions.options\\9.0.7\\microsoft.extensions.options.9.0.7.nupkg.sha512",
     "C:\\Users\\praksa\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.7\\microsoft.extensions.primitives.9.0.7.nupkg.sha512",
     "C:\\Users\\praksa\\.nuget\\packages\\microsoft.openapi\\1.6.14\\microsoft.openapi.1.6.14.nupkg.sha512",
+    "C:\\Users\\praksa\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.22.1\\microsoft.visualstudio.azure.containers.tools.targets.1.22.1.nupkg.sha512",
     "C:\\Users\\praksa\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\praksa\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512",
     "C:\\Users\\praksa\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.4\\npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",

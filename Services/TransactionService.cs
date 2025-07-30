@@ -108,7 +108,7 @@ namespace PFM.Backend.Services
                     break;
 
                 case "date":
-                    
+
                     query = parameters.SortOrder?.ToLower() == "desc"
                             ? query.OrderByDescending(t => t.Date)
                             : query.OrderBy(t => t.Date);
@@ -205,23 +205,25 @@ namespace PFM.Backend.Services
 
                 return new SpendingAnalyticsResponse
                 {
-                    Groups = new List<SpendingGroupDTO> {group }
+                    Groups = new List<SpendingGroupDTO> { group }
                 };
             }
         }
 
-        public async Task AutoCategorize()
-                {
-                    foreach (var rule in _rulesConfig.Rules)
-                    {
-                        var title = rule.Title;
-                        var catcode = rule.Catcode;
-                        var predicate = rule.Predicate;
 
-                        var query = $"UPDATE \"Transactions\" SET \"Catcode\" = '{catcode}' WHERE {predicate} AND \"Catcode\" IS NULL";
-                        await _context.Database.ExecuteSqlRawAsync(query);
-                    }
-                }
+
+        public async Task AutoCategorize()
+        {
+            foreach (var rule in _rulesConfig.Rules)
+            {
+                var title = rule.Title;
+                var catcode = rule.Catcode;
+                var predicate = rule.Predicate;
+
+                var query = $"UPDATE \"Transactions\" SET \"Catcode\" = '{catcode}' WHERE {predicate} AND \"Catcode\" IS NULL";
+                await _context.Database.ExecuteSqlRawAsync(query);
+            }
+        }
 
         public async Task<bool> SplitTransactionAsync(string transactionId, List<SplitItemDTO> splits)
         {
@@ -232,7 +234,7 @@ namespace PFM.Backend.Services
             if (transaction == null)
                 return false;
 
-            
+
             foreach (var split in splits)
             {
                 var category = await _context.Categories.FindAsync(split.Catcode);
@@ -240,7 +242,7 @@ namespace PFM.Backend.Services
                     return false;
             }
 
-            
+
             var totalSplitAmount = splits.Sum(s => s.Amount);
             if (totalSplitAmount > transaction.Amount)
             {
@@ -250,11 +252,11 @@ namespace PFM.Backend.Services
         });
             }
 
-            
+
             var existingSplits = _context.TransactionSplits.Where(s => s.TransactionId == transactionId);
             _context.TransactionSplits.RemoveRange(existingSplits);
 
-            
+
             foreach (var split in splits)
             {
                 var newSplit = new TransactionSplit

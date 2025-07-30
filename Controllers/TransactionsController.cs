@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PFM.Backend.Database.Entities;
 using PFM.Backend.Database.Entities.CategoriesDTO;
+using PFM.Backend.Models.Exceptions;
 using PFM.Backend.Models.Queries;
 using PFM.Backend.Models.Requests;
 using PFM.Backend.Models.Responses;
@@ -43,12 +44,12 @@ namespace PFM.Controllers
                 var hasBusinessError = result.Errors.Any(e => e.Error == "duplicate-id");
 
                 if (hasBusinessError)
-                    return StatusCode(440, result); // Biznis greška  440
+                    return StatusCode(440, result); 
 
-                return BadRequest(result); // Validacione greške 400
+                return BadRequest(result); 
             }
 
-            return Ok("Transactions imported successfully."); // 200  ok
+            return Ok("Transactions imported successfully."); 
         }
 
 
@@ -106,23 +107,54 @@ namespace PFM.Controllers
         }
 
 
+
         [HttpPost("{id}/split")]
-        public async Task<IActionResult> SplitTransaction(string id, [FromBody] List<SplitItemDTO> splits)
+        public async Task<IActionResult> SplitTransaction(string id, [FromBody] SplitTransactionDTO dto)
         {
-            var success = await _transactionService.SplitTransactionAsync(id, splits);
+            if (dto?.Splits == null || !dto.Splits.Any())
+            {
+                return BadRequest(new
+                {
+                    errors = new List<ValidationError>
+            {
+                new ValidationError("splits", "missing-field", "At least one split is required.")
+            }
+                });
+            }
 
-            if (!success)
-                return NotFound("Transaction or one of the categories not found.");
+            try
+            {
+                var success = await _transactionService.SplitTransactionAsync(id, dto.Splits);
 
-            return Ok("Transaction split successfully.");
+                if (!success)
+                    return NotFound(new
+                    {
+                        errors = new List<ValidationError>
+                {
+                    new ValidationError("transaction", "not-found", "Transaction or one of the categories not found.")
+                }
+                    });
+
+                return Ok(new
+                {
+                    splits = dto.Splits
+                });
+            }
+            catch (BusinessException ex)
+            {
+                return StatusCode(440, new
+                {
+                    errors = ex.Errors
+                });
+            }
         }
 
         [HttpPost("auto-categorize")]
-                public async Task<ActionResult<string>> AutoCategorize()
-                {
-                    await _transactionService.AutoCategorize();
-                    return Ok();
-                }
+        public async Task<ActionResult<string>> AutoCategorize()
+        {
+            await _transactionService.AutoCategorize();
+            return Ok();
+        }
 
     }
 }

@@ -16,7 +16,7 @@ namespace PFM.Backend.Services
         DateTime? startDate,
         DateTime? endDate,
         Direction? direction
-    );
+      );
         Task<bool> SplitTransactionAsync(string transactionId, List<SplitItemDTO> splits);
         Task AutoCategorize();
 

@@ -1,0 +1,113 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
+using PFM.Backend.Database.Entities;
+using PFM.Backend.Middleware;
+using PFM.Backend.Models.AutomaticCategorization;
+using PFM.Backend.Services;
+using PFM.Data;
+using System.Text.Json.Serialization;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
+Console.WriteLine(">>> Program.cs is running <<<");
+
+//povezivanje sa bazom
+builder.Services.AddDbContext<TransactionDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Configuration.AddJsonFile("RulesConfig.json", optional: false, reloadOnChange: false);
+
+
+//registrovanje servisa 
+builder.Services.AddScoped<TransactionImportService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+
+
+builder.Services.AddScoped<ICategoryImportService, CategoryImportService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "PFM API", Version = "v1" });
+    c.OperationFilter<AddCsvRequestBodyFilter>();
+});
+
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = new KebabCaseNamingPolicy();
+    });
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(e => e.Value?.Errors.Count > 0)
+            .Select(e => new PFM.Backend.Models.Validation.ValidationError(
+                tag: e.Key.ToLowerInvariant(),
+                error: "invalid-value",
+                message: e.Value.Errors.First().ErrorMessage
+            ))
+            .ToList();
+
+        var result = new { errors };
+        return new BadRequestObjectResult(result);
+    };
+});
+
+builder.Services.Configure<RulesConfig>(
+        builder.Configuration
+ );
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") 
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+var app = builder.Build();
+app.UseCors("AllowFrontend");
+
+// Development konfiguracija
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.UseMiddleware<ErrorHandlingMiddleware>();
+app.MapControllers();
+Console.WriteLine(">>> app.MapControllers() postavljen <<<");
+app.Run();

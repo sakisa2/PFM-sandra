@@ -1525,4 +1525,3 @@ C:\Users\praksa\Desktop\ispravno\PFM-sandra\obj\Debug\net8.0\staticwebassets.bui
 C:\Users\praksa\Desktop\ispravno\PFM-sandra\obj\Debug\net8.0\PFM.Back.248670C7.Up2Date
 C:\Users\praksa\Desktop\ispravno\PFM-sandra\obj\Debug\net8.0\PFM.Backend.genruntimeconfig.cache
 C:\Users\praksa\Desktop\ispravno\PFM-sandra\obj\Debug\net8.0\ref\PFM.Backend.dll
-C:\Users\praksa\Desktop\ispravno\PFM-sandra\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

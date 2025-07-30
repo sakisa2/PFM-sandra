@@ -130,8 +130,8 @@
         "IsRequired": true
       },
       {
-        "Name": "splits",
-        "Type": "System.Collections.Generic.List\u00601[[PFM.Backend.Models.Requests.SplitItemDTO, PFM.Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Name": "dto",
+        "Type": "PFM.Backend.Models.Requests.SplitTransactionDTO",
         "IsRequired": true
       }
     ],

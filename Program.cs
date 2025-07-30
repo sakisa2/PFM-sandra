@@ -1,11 +1,12 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using PFM.Backend.Database.Entities;
 using PFM.Backend.Middleware;
+using PFM.Backend.Models.AutomaticCategorization;
 using PFM.Backend.Services;
 using PFM.Data;
-using PFM.Backend.Models.AutomaticCategorization;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,12 +41,6 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services
-    .AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -53,17 +48,13 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "PFM API", Version = "v1" });
     c.OperationFilter<AddCsvRequestBodyFilter>();
 });
-// options =>
-// {
-//     options.MapType<Kind>(() => new OpenApiSchema
-//     {
-//         Type = "string",
-//         Enum = Enum.GetNames(typeof(Kind))
-//             .Select(n => new OpenApiString(n))
-//             .Cast<IOpenApiAny>()
-//             .ToList()
-//     });
-// });
+
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services
     .AddControllers()
@@ -72,15 +63,33 @@ builder.Services
         options.JsonSerializerOptions.PropertyNamingPolicy = new KebabCaseNamingPolicy();
     });
 
-    builder.Services.Configure<RulesConfig>(
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(e => e.Value?.Errors.Count > 0)
+            .Select(e => new PFM.Backend.Models.Validation.ValidationError(
+                tag: e.Key.ToLowerInvariant(),
+                error: "invalid-value",
+                message: e.Value.Errors.First().ErrorMessage
+            ))
+            .ToList();
+
+        var result = new { errors };
+        return new BadRequestObjectResult(result);
+    };
+});
+
+builder.Services.Configure<RulesConfig>(
         builder.Configuration
-    );
+ );
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:4200") // ili https ako koristiš SSL
+        policy.WithOrigins("http://localhost:4200") 
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -89,10 +98,8 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 app.UseCors("AllowFrontend");
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
-
 // Development konfiguracija
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -100,6 +107,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.MapControllers();
 Console.WriteLine(">>> app.MapControllers() postavljen <<<");
 app.Run();

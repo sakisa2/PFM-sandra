@@ -237,26 +237,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SplitItemDTO"
-                }
+                "$ref": "#/components/schemas/SplitTransactionDTO"
               }
             },
             "text/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SplitItemDTO"
-                }
+                "$ref": "#/components/schemas/SplitTransactionDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SplitItemDTO"
-                }
+                "$ref": "#/components/schemas/SplitTransactionDTO"
               }
             }
           }
@@ -350,6 +341,21 @@
           "amount": {
             "type": "number",
             "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SplitTransactionDTO": {
+        "required": [
+          "splits"
+        ],
+        "type": "object",
+        "properties": {
+          "splits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SplitItemDTO"
+            }
           }
         },
         "additionalProperties": false
